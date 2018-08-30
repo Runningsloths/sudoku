@@ -13,7 +13,13 @@ class SudokuLauncher
 
     public static void main(String args[])
     {
-        GameState sh = new SudokuHandler();
+        int[][] board = new int[SudokuHandler.BOARD_SIZE][SudokuHandler.BOARD_SIZE];
+        for (int i = 0; i < SudokuHandler.BOARD_SIZE; i++) {
+            for (int j = 0; j < SudokuHandler.BOARD_SIZE; j++) {
+                board[i][j] = 0;
+            }
+        }
+        GameState sh = new SudokuHandler(board);
         GameDriver sudoku = new GameDriver(sh);
         sudoku.play();
     }
