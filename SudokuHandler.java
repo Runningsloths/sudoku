@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class SudokuHandler implements GameState
 {
     public static final int BOARD_SIZE = 9;
@@ -7,15 +9,41 @@ public class SudokuHandler implements GameState
     {
     	board = _board;
     }
+    public void genBoard()
+    {
+        List<Integer> vals = Arrays.asList(1,2,3,4,5,6,7,8,9);
+        int counter = 1;
+        Collections.shuffle(vals);
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            board[0][i] = vals.get(i);
+        }
+        while (counter < BOARD_SIZE) {
+            Collections.shuffle(vals);
+            for (int i = 0; i < BOARD_SIZE; i++) {
+                if (conditionsMet(counter, i, vals.get(i))) {
+                    setBoard(counter, i, vals.get(i));
+                }
+                else {
+                    break;
+                }
+            }
+            if (IntStream.of(board[counter]).anyMatch(x -> x != 0)) {
+                counter++;
+            }
+        }
+    }
     public boolean conditionsMet(int row, int col, int ans)
     {
-    	if (row > 0 && row < 10 && col > 0 && col < 10) {
+        if (ans > 9 && ans < 0) {
+            return false;
+        }
+    	if (row >= 0 && row < 9 && col >= 0 && col < 9) {
     		for (int i = 0; i < BOARD_SIZE; i++) {
     			if (board[row][i] == ans || board[i][col] == ans) {
     				return false;
     			}
     		}
-			int newRow = row + 1, newCol = col + 1;
+			int newRow = row, newCol = col;
 			int startRow = newRow - (newRow % 3), startCol = newCol - (newCol % 3);
 			for (int i = startRow; i < startRow + 3; i++) {
 				for (int j = startCol; j < startCol + 3; j++) {
@@ -49,7 +77,12 @@ public class SudokuHandler implements GameState
     	for (int i = 0; i < BOARD_SIZE; i++) {
     		temp += (i + 1) + "| ";
     		for (int j = 0; j < BOARD_SIZE; j++) {
-    			temp += board[i][j] + " ";
+                if (board[i][j] == 0) {
+                    temp += "  ";
+                }
+                else {
+                    temp += board[i][j] + " ";
+                }
     			if (j > 0 && j % 3 == 2) {
     				temp += "| ";
     			}
