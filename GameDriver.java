@@ -24,5 +24,6 @@ public class GameDriver
                 state.setBoard(row, col, val);
             }
         }
+        System.out.println(state);
     }
 }
